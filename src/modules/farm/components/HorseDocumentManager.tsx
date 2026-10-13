@@ -32,7 +32,7 @@ function HorseDocumentManager({ horse, documents, locked }: HorseDocumentManager
         Proof Documents <span className="normal-case font-normal">({count}/3)</span>
       </p>
       <p className="text-[12px] text-brand-muted normal-case">
-        All 3 are required before this horse can be submitted for review.
+        All 3 are required before this horse can be submitted for review. Accepted: images or PDF, max 10MB per file.
       </p>
       {horse.status === 'approved' && (
         <p className="text-[12px] text-yellow-500 normal-case">

@@ -116,7 +116,7 @@ function FarmImageManager({ farm, onChange, disabled = false }: Props) {
       </div>
 
       <p className="text-[12px] text-brand-muted normal-case">
-        Add up to {FARM_IMAGE_LIMIT} photos of your farm. The first one is shown on your public farm page. At least one photo is required before your farm can be approved.
+        Add up to {FARM_IMAGE_LIMIT} photos of your farm. The first one is shown on your public farm page. At least one photo is required before your farm can be approved. Max 10MB per file.
       </p>
 
       {imageCount === 0 || !activeImage ? (

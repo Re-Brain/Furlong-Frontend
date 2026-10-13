@@ -32,7 +32,7 @@ function FarmDocumentManager({ farm, documents, locked }: FarmDocumentManagerPro
         Proof Documents <span className="text-red-600">*</span> <span className="normal-case font-normal">({count}/3)</span>
       </p>
       <p className="text-[12px] text-brand-muted normal-case">
-        All 3 are required before your farm can be submitted for review.
+        All 3 are required before your farm can be submitted for review. Accepted: images or PDF, max 10MB per file.
       </p>
       {farm.status === 'active' && (
         <p className="text-[12px] text-yellow-500 normal-case">

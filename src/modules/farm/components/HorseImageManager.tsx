@@ -58,6 +58,8 @@ function HorseImageManager({ horse, images, locked }: HorseImageManagerProps) {
         )}
       </div>
 
+      <p className="text-[12px] text-brand-muted normal-case">Max 10MB per file.</p>
+
       {/* Active image, or a placeholder when none are uploaded. */}
       {imageCount === 0 ? (
         <div className="flex items-center justify-center h-40 rounded-lg border border-dashed border-brand-border text-brand-muted text-sm">
