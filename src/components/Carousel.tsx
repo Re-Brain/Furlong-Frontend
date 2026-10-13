@@ -35,6 +35,12 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
   const dragging = useRef(false)
   const moved = useRef(false)
   const hovering = useRef(false)
+  // Touch/pen scrolling is native (see onPointerDown) so it never sets
+  // `dragging`, and hover doesn't reliably fire on touchscreens either -
+  // without this, the marquee below has no way to know a touch drag is in
+  // progress and keeps resetting scrollLeft every frame, fighting the
+  // user's own drag.
+  const touching = useRef(false)
   const startX = useRef(0)
   const startScroll = useRef(0)
   const pointerId = useRef<number | null>(null)
@@ -98,7 +104,7 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
       const dt = (now - last) / 1000
       last = now
       const el = scrollRef.current
-      if (el && !dragging.current && !hovering.current) {
+      if (el && !dragging.current && !hovering.current && !touching.current) {
         pos.current += dir * speed * dt
         el.scrollLeft = pos.current
         wrap(el)
@@ -110,8 +116,12 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
   }, [loop, speed, direction])
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    // Let touch/pen use native scrolling; only hijack mouse drags.
-    if (e.pointerType !== 'mouse') return
+    // Let touch/pen use native scrolling; only hijack mouse drags. Still
+    // track that a touch/pen scroll is active so the marquee pauses for it.
+    if (e.pointerType !== 'mouse') {
+      touching.current = true
+      return
+    }
     const el = scrollRef.current
     if (!el) return
     pointerId.current = e.pointerId
@@ -141,6 +151,10 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
   }
 
   function endDrag(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== 'mouse') {
+      touching.current = false
+      return
+    }
     if (pointerId.current !== e.pointerId) return
     pointerId.current = null
     if (dragging.current) {
