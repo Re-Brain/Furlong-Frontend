@@ -225,6 +225,7 @@ function FarmAvailabilityEditor({
               onKeyDown={e => {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault()
               }}
+              onWheel={e => e.currentTarget.blur()}
               onBlur={() => {
                 if (leadDaysError) return
                 setDraft(d => (d ? { ...d, min_lead_days: leadDaysNum } : d))

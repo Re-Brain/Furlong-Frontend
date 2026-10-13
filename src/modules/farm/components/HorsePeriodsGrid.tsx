@@ -199,6 +199,14 @@ function HorsePeriodsGrid({
                           value={farmOpen ? capacities[p.key] || 0 : 0}
                           disabled={disabled}
                           onChange={e => setCapacity(horse.id, p.key, e.target.valueAsNumber)}
+                          // Number inputs otherwise change value on scroll (while
+                          // focused) and on ArrowUp/ArrowDown, on top of the spin
+                          // buttons already hidden below - blur/preventDefault so
+                          // typing is the only way to change it, like a normal input.
+                          onWheel={e => e.currentTarget.blur()}
+                          onKeyDown={e => {
+                            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault()
+                          }}
                           aria-label={`${horse.name} — ${p.label} capacity`}
                           title={farmOpen ? 'Max visitors for this period' : 'Closed in the farm schedule'}
                           className="w-full h-full bg-brand-bg px-4 py-3 text-center text-brand-text text-sm focus:outline-none focus:bg-brand-surface focus:ring-2 focus:ring-inset focus:ring-brand-gold disabled:opacity-40 disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
