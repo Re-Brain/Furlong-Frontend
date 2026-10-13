@@ -176,6 +176,11 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
   return (
     <div
       ref={scrollRef}
+      // Lenis (App.tsx) intercepts scroll/touch gestures globally and only
+      // leaves an element alone if it's marked like this - without it, Lenis
+      // was fighting this carousel's own native touch handling the whole
+      // time, independent of the marquee-pause and touch-action fixes above.
+      data-lenis-prevent
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
