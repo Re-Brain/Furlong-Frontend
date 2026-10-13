@@ -184,7 +184,11 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
       onDragStart={e => e.preventDefault()}
       onPointerEnter={() => { hovering.current = true }}
       onPointerLeave={() => { hovering.current = false }}
-      className="flex gap-3 overflow-x-auto py-2 cursor-grab active:cursor-grabbing select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      // Without this, a real touchscreen has to guess whether a drag here
+      // means "scroll this row sideways" or "scroll the page" - pan-x tells
+      // it horizontal gestures belong to this element, so dragging feels
+      // immediate instead of sluggish/fighting the page scroll.
+      className="flex gap-3 overflow-x-auto py-2 cursor-grab active:cursor-grabbing select-none touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {/* Three identical copies when looping: the first is the "real" content;
           the middle (track2) is where we park the scroll position; the third
