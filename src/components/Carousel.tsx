@@ -49,18 +49,28 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
   // at ~0.6px/frame stalls the marquee entirely — so we accumulate here.
   const pos = useRef(0)
 
-  // Only enable the duplicated track + auto-scroll when content overflows.
+  // The marquee (auto-scroll + infinite loop) only makes sense for a mouse,
+  // where it never has to compete with anything. On a touch-primary device
+  // it kept fighting the user's own drag in new ways no matter what we
+  // patched (the auto-scroll resetting scrollLeft mid-drag, then snapping
+  // back to a stale position once the drag ended) — simpler and more robust
+  // to just not run it there at all and let the row be a plain, natively
+  // scrollable one instead.
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+
+  // Only enable the duplicated track + auto-scroll when content overflows
+  // (and never on a touch-primary device - see isTouchDevice above).
   useEffect(() => {
     const el = scrollRef.current
     const track = track1Ref.current
     if (!el || !track) return
-    const update = () => setLoop(track.scrollWidth > el.clientWidth + 1)
+    const update = () => setLoop(!isTouchDevice && track.scrollWidth > el.clientWidth + 1)
     update()
     const ro = new ResizeObserver(update)
     ro.observe(el)
     ro.observe(track)
     return () => ro.disconnect()
-  }, [children])
+  }, [children, isTouchDevice])
 
   // Distance from the start of the first track to the start of its duplicate —
   // the point at which we can reset scrollLeft for a seamless loop.
