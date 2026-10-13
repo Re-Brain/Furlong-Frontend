@@ -45,7 +45,7 @@ function AvailabilitySection({ farm, horses, horsesError, onRetryHorses }: Avail
       )}
 
       <div className="mt-8">
-        <h3 className="text-lg font-bold text-brand-text mb-1">Which horses, which periods</h3>
+        <h3 className="text-lg font-bold text-brand-text mb-1">Per-Horse Capacity</h3>
         <p className="text-brand-muted text-sm mb-4">
           Set the max number of visitors for each period below (using the farm&rsquo;s times
           above). Set every period to 0 to make a horse unavailable for visits entirely. Only
