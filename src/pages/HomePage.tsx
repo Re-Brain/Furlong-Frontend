@@ -122,7 +122,7 @@ function HomePage() {
         {/* Farms Section Zone */}
 
         {/* Farms Section Header - Header text & Button link to the list of all farms  */}
-        <div className="flex flex-col items-start gap-3 xs:flex-row xs:items-baseline xs:justify-between mb-8">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <h1 className="text-xl xs:text-2xl sm:text-3xl 2xl:text-4xl font-extrabold text-brand-gold">Farms Open to Visitors</h1>
           <Link to="/farms" className="text-xs sm:text-sm font-bold text-brand-gold border border-brand-gold rounded-full px-4 py-1.5 hover:bg-brand-gold hover:text-brand-bg transition shrink-0">Browse all farms</Link>
         </div>
@@ -157,9 +157,9 @@ function HomePage() {
         {/* Horses Section Content */}
 
         {/* Horses Section Header - Header text & Button link to the list of all horses  */}
-        <div className="flex flex-col-reverse items-start gap-3 xs:flex-row xs:items-baseline xs:justify-between mb-8 mt-16">
-          <Link to="/horses" className="text-xs sm:text-sm font-bold text-brand-gold border border-brand-gold rounded-full px-4 py-1.5 hover:bg-brand-gold hover:text-brand-bg transition shrink-0">Meet every champion</Link>
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 mt-12 sm:mt-16">
           <h1 className="text-xl xs:text-2xl sm:text-3xl 2xl:text-4xl font-extrabold text-brand-gold">Champions in Retirement</h1>
+          <Link to="/horses" className="text-xs sm:text-sm font-bold text-brand-gold border border-brand-gold rounded-full px-4 py-1.5 hover:bg-brand-gold hover:text-brand-bg transition shrink-0">Meet every champion</Link>
         </div>
 
         {/* Show when the horse content is loading */}

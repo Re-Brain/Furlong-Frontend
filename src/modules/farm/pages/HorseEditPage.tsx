@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback, type Dispatch, type SetStateAction } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Eye, AlertTriangle, Info, Check, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Eye, AlertTriangle, Info } from 'lucide-react'
 import { getHorse, DOCUMENT_TYPES, type Horse } from '../api/horse'
 import { useFarm } from '../context/useFarm'
 import { useHorseImages } from '../hooks/useHorseImages'
 import HorseImageManager from '../components/HorseImageManager'
-import { useHorseInfoForm, PEDIGREE_FIELDS } from '../hooks/useHorseInfoForm'
+import { useHorseInfoForm } from '../hooks/useHorseInfoForm'
+import HorseReviewSummary from '../components/HorseReviewSummary'
 import HorseInfoEditor from '../components/HorseInfoEditor'
 import { useHorseRaceRecords } from '../hooks/useHorseRaceRecords'
 import HorseRaceRecordsEditor from '../components/HorseRaceRecordsEditor'
@@ -186,82 +187,7 @@ function HorseEditPage() {
 
       {step === 3 && (
         <div className="flex flex-col gap-6">
-          <div className="bg-brand-surface border border-brand-border rounded-lg p-4 xs:p-6 flex flex-col gap-5">
-            <div>
-              <p className="text-xs font-bold text-brand-muted uppercase mb-2">Basic Info</p>
-              <p className="text-lg font-bold text-brand-text">{horse.name}</p>
-              <div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-3 mt-1 text-sm text-brand-muted">
-                <p>Color: <span className="text-brand-text">{horse.color || '—'}</span></p>
-                <p>Gender: <span className="text-brand-text capitalize">{horse.gender || '—'}</span></p>
-                <p>Date of birth: <span className="text-brand-text">{horse.date_of_birth || '—'}</span></p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold text-brand-muted uppercase mb-2">
-                Pedigree <span className="normal-case font-normal">({PEDIGREE_FIELDS.filter(({ key }) => horse[key]).length}/{PEDIGREE_FIELDS.length} filled)</span>
-              </p>
-              <div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 text-sm text-brand-muted">
-                {PEDIGREE_FIELDS.map(({ key, label }) => (
-                  <p key={key}>
-                    {label}: <span className="text-brand-text">{horse[key] || '—'}</span>
-                  </p>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold text-brand-muted uppercase mb-2">
-                Images <span className="normal-case font-normal">({horse.images.length}/3)</span>
-              </p>
-              {horse.images.length === 0 ? (
-                <p className="text-sm text-brand-muted">No images uploaded.</p>
-              ) : (
-                <div className="flex gap-2">
-                  {horse.images.map(img => (
-                    <img
-                      key={img.id}
-                      src={img.image_url}
-                      alt={horse.name}
-                      className="w-16 h-16 object-cover rounded-lg border border-brand-border"
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <p className="text-xs font-bold text-brand-muted uppercase mb-2">Proof Documents</p>
-              <div className="flex flex-col gap-1">
-                {DOCUMENT_TYPES.map(({ key, label }) => {
-                  const attached = horse.documents?.some(d => d.document_type === key)
-                  return (
-                    <p key={key} className={`flex items-center gap-2 text-sm ${attached ? 'text-brand-text' : 'text-brand-muted'}`}>
-                      {attached ? <Check size={14} className="text-green-600" /> : <X size={14} className="text-brand-muted" />}
-                      {label}
-                    </p>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold text-brand-muted uppercase mb-2">
-                Race Records <span className="normal-case font-normal">({horse.race_records.length})</span>
-              </p>
-              {horse.race_records.length === 0 ? (
-                <p className="text-sm text-brand-muted">No race records added.</p>
-              ) : (
-                <ul className="flex flex-col gap-1 text-sm text-brand-muted">
-                  {horse.race_records.map(r => (
-                    <li key={r.id}>
-                      {r.race_date} &middot; {r.race_name} @ {r.course}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+          <HorseReviewSummary horse={horse} onEdit={setStep} locked={imageActionsLocked} />
 
           {(horse.status === 'draft' || horse.status === 'rejected') && (
             <div className="flex flex-col gap-3 bg-brand-surface border border-brand-border rounded-lg p-4 xs:p-6">
