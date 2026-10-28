@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AlertTriangle, Menu } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import { useFarm } from '../context/useFarm'
 import { createDraftHorse } from '../api/horse'
 import { useFarmInfoForm } from '../hooks/useFarmInfoForm'
 import { useFarmDocuments } from '../hooks/useFarmDocuments'
 import { useFarmSubmit } from '../hooks/useFarmSubmit'
 import { useAccountSettings } from '../../../hooks/useAccountSettings'
-import DashboardSidebar, { gatedSections, type Section } from '../components/DashboardSidebar'
+import DashboardSidebar from '../components/DashboardSidebar'
+import MobileSectionTabs from '../components/MobileSectionTabs'
+import { gatedSections, type Section } from '../components/dashboardNav'
 import FarmInfoSection from '../components/FarmInfoSection'
 import HorseManagementSection from '../components/HorseManagementSection'
 import AvailabilitySection from '../components/AvailabilitySection'
@@ -86,14 +88,7 @@ function FarmerDashboardPage() {
           whole flex item — and the page along with it — instead of staying
           contained so that content's own overflow-x-auto can do its job. */}
       <main className="flex-1 min-w-0 p-4 xs:p-6 sm:p-8">
-        {/* Only way to open the drawer on mobile — its own toggle button
-            lives inside the sidebar, which starts off-screen there. */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-gold font-bold text-sm mb-4 transition"
-        >
-          <Menu size={20} /> Menu
-        </button>
+        <MobileSectionTabs activeSection={activeSection} onNavClick={handleNavClick} farmActive={farmActive} />
 
         {loading ? (
           <p className="text-brand-muted text-sm">Loading…</p>
