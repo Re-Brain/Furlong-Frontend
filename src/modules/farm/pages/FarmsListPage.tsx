@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { getActiveFarms, type ActiveFarm } from '../api/farm'
 import OverlayCard from '../../../components/OverlayCard'
+import ShowMoreButton from '../../../components/ShowMoreButton'
+import { useShowMore } from '../../../hooks/useShowMore'
 
 function FarmsListPage() {
   const navigate = useNavigate()
@@ -19,6 +21,9 @@ function FarmsListPage() {
       .catch(() => setError('Failed to load farms. Please try again later.'))
       .finally(() => setLoading(false))
   }, [])
+
+  // Reveal farms 12 at a time rather than rendering the whole list at once.
+  const { visible: visibleFarms, remaining, showMore } = useShowMore(farms)
 
   return (
     <div className="min-h-[calc(100vh-3.25rem)] bg-brand-bg text-brand-text">
@@ -52,7 +57,7 @@ function FarmsListPage() {
 
         {/* Show grid of farms if there are any */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-          {farms.map(farm => (
+          {visibleFarms.map(farm => (
             <OverlayCard
               key={farm.id}
               to={`/farms/${farm.id}`}
@@ -62,6 +67,7 @@ function FarmsListPage() {
             />
           ))}
         </div>
+        <ShowMoreButton remaining={remaining} onClick={showMore} />
       </div>
     </div>
   )
