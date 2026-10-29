@@ -43,8 +43,29 @@ function FarmHero({ farm }: FarmHeroProps) {
     }
   }
 
+  // Click a thumbnail to change the main photo. Only shown with 2+ photos.
+  const thumbnails = (className: string) =>
+    farmImages.length > 1 && (
+      <div className={`flex gap-3 ${className}`}>
+        {farmImages.map((img, i) => (
+          <button
+            key={img.id}
+            onClick={() => setActiveImageIndex(i)}
+            aria-label={`View photo ${i + 1}`}
+            className={`flex-none w-24 h-16 xs:w-28 xs:h-20 lg:w-32 lg:h-24 rounded-md overflow-hidden border-2 transition ${
+              i === activeImageIndex
+                ? 'border-white'
+                : 'border-white/30 opacity-70 hover:opacity-100'
+            }`}
+          >
+            <img src={img.image_url} alt="" className="w-full h-full object-cover" decoding="async" />
+          </button>
+        ))}
+      </div>
+    )
+
   return (
-    <section className="relative grid lg:grid-cols-[1fr_1.4fr] min-h-[calc(100vh-3.25rem)]">
+    <section className="relative grid lg:grid-cols-[1fr_1.4fr] lg:min-h-[calc(100vh-3.25rem)]">
       <button
         onClick={() => (cameFromDonationFlow ? navigate('/') : navigate(-1))}
         className="fixed top-20 left-2 z-40 flex items-center gap-2 bg-black/50 hover:bg-black/70 text-white text-sm font-bold px-3 py-1.5 rounded-full backdrop-blur-sm transition"
@@ -52,8 +73,8 @@ function FarmHero({ farm }: FarmHeroProps) {
         <ArrowLeft size={16} /> Back
       </button>
 
-      {/* Left: details panel */}
-      <div className="relative lg:order-1 flex flex-col items-center justify-center text-center gap-7 bg-brand-gold text-white p-6 xs:p-8 sm:p-10 lg:p-16 overflow-hidden">
+      {/* Left (lg+): details panel. Below lg the photo stacks first, then this. */}
+      <div className="relative order-2 lg:order-1 flex flex-col items-center justify-center text-center gap-7 bg-brand-gold text-white p-6 xs:p-8 sm:p-10 lg:p-16 overflow-hidden">
         {hasImages && (
           <div
             aria-hidden
@@ -66,10 +87,7 @@ function FarmHero({ farm }: FarmHeroProps) {
           className="absolute inset-0 bg-linear-to-b from-brand-gold/40 via-brand-gold/70 to-brand-gold"
         />
 
-        {/* mt-10 clears the fixed Back button pinned at top-20 — this panel
-            renders first on mobile, so its heading would otherwise land
-            right under that button. Not needed at lg. */}
-        <div className="relative z-1 flex flex-col items-center gap-6 mt-10 lg:mt-0">
+        <div className="relative z-1 flex flex-col items-center gap-6">
           <div className="flex flex-col items-center gap-4">
             <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-wide uppercase leading-none">
               <span className="text-amber-300">{farm.name.charAt(0)}</span>
@@ -90,36 +108,17 @@ function FarmHero({ farm }: FarmHeroProps) {
             <Heart size={16} fill="currentColor" /> Donate
           </button>
 
-          {/* Photo gallery — click a thumbnail to change the main photo. */}
-          {farmImages.length > 1 && (
-            <div className="flex flex-wrap justify-center gap-3 max-w-xl mt-2">
-              {farmImages.map((img, i) => (
-                <button
-                  key={img.id}
-                  onClick={() => setActiveImageIndex(i)}
-                  aria-label={`View photo ${i + 1}`}
-                  className={`flex-none w-24 h-20 xs:w-32 xs:h-24 rounded-md overflow-hidden border-2 transition ${
-                    i === activeImageIndex
-                      ? 'border-white'
-                      : 'border-white/30 opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <img
-                    src={img.image_url}
-                    alt=""
-                    className="w-full h-full object-cover"
-                    decoding="async"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Thumbnails live here only at lg+; below that they sit under the
+              main photo so they're reachable without scrolling past the name. */}
+          <div className="hidden lg:block mt-2">{thumbnails('flex-wrap justify-center max-w-xl')}</div>
         </div>
       </div>
 
       {/* Right: framed photo on a blurred backdrop, or an empty state
           when the farm hasn't shared any photos yet. */}
-      <div className="relative lg:order-2 bg-brand-bg flex items-center justify-center min-h-[45vh] lg:min-h-0 overflow-hidden p-4 xs:p-6 lg:p-10">
+      {/* pt-16 clears the fixed Back button pinned at top-20, which sits over this
+          panel below lg; not needed at lg where there's more room. */}
+      <div className="relative order-1 lg:order-2 bg-brand-bg flex flex-col items-center justify-center gap-4 overflow-hidden px-4 pb-6 pt-16 xs:px-6 sm:pb-8 lg:p-10">
         {hasImages ? (
           <>
             <div
@@ -146,6 +145,12 @@ function FarmHero({ farm }: FarmHeroProps) {
             </p>
           </div>
         )}
+
+        {/* Below lg: thumbnails right under the photo, scrolling sideways if
+            there are more than fit. */}
+        <div className="relative z-1 w-full max-w-2xl lg:hidden">
+          {thumbnails('overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden')}
+        </div>
       </div>
     </section>
   )
