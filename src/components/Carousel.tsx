@@ -203,7 +203,9 @@ function Carousel({ children, speed = 40, direction = 'left' }: CarouselProps) {
       // means "scroll this row sideways" or "scroll the page" - pan-x tells
       // it horizontal gestures belong to this element, so dragging feels
       // immediate instead of sluggish/fighting the page scroll.
-      className="flex gap-3 overflow-x-auto py-2 cursor-grab active:cursor-grabbing select-none touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      // px-1 -mx-1: room inside the scroll box for the cards' 2px hover ring,
+      // which overflow clipping would otherwise cut off at the row's edges.
+      className="flex gap-3 overflow-x-auto px-1 -mx-1 py-2 cursor-grab active:cursor-grabbing select-none touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {/* Three identical copies when looping: the first is the "real" content;
           the middle (track2) is where we park the scroll position; the third
