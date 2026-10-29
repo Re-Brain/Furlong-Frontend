@@ -3,7 +3,7 @@ import { getActiveFarms, type ActiveFarm, getAllHorses, type Horse } from '../mo
 import { Link } from 'react-router-dom'
 import { Search, CalendarCheck, HeartHandshake, HandCoins } from 'lucide-react'
 import OverlayCard from '../components/OverlayCard'
-import Carousel from '../components/Carousel'
+import CardRow from '../components/CardRow'
 import HorseshoeIcon from '../components/HorseshoeIcon'
 
 // The 3-step explainer shown in the "How It Works" section below the hero.
@@ -142,17 +142,17 @@ function HomePage() {
 
         {/* Show Carousel of active farms if there are any */}
         {/* Maximum at 12 farms */}
-        <Carousel>
+        <CardRow>
           {farms.slice(0, 12).map(farm => (
-            <div key={farm.id} className="flex-none w-40 xs:w-48 sm:w-56">
-              <OverlayCard
-                to={`/farms/${farm.id}`}
-                imageUrl={farm.images?.[0]?.image_url}
-                title={farm.name}
-              />
-            </div>
+            <OverlayCard
+              key={farm.id}
+              to={`/farms/${farm.id}`}
+              imageUrl={farm.images?.[0]?.image_url}
+              title={farm.name}
+              aspect="aspect-[5/4]"
+            />
           ))}
-        </Carousel>
+        </CardRow>
 
         {/* Horses Section Content */}
 
@@ -175,17 +175,17 @@ function HomePage() {
 
         {/* Show Carousel of approved horses if there are any */}
         {/* Maximum at 12 horses */}
-        <Carousel direction="right">
+        <CardRow direction="right">
           {approvedHorses.slice(0, 12).map(horse => (
-            <div key={horse.id} className="flex-none w-40 xs:w-48 sm:w-56">
-              <OverlayCard
-                to={`/horses/${horse.id}`}
-                imageUrl={horse.images[0]?.image_url}
-                title={horse.name}
-              />
-            </div>
+            <OverlayCard
+              key={horse.id}
+              to={`/horses/${horse.id}`}
+              imageUrl={horse.images[0]?.image_url}
+              title={horse.name}
+              aspect="aspect-[5/4]"
+            />
           ))}
-        </Carousel>
+        </CardRow>
 
         {/* Meet/Support CTAs - surface the booking and donation flows, which
             otherwise only appear once you're already on a horse's or farm's

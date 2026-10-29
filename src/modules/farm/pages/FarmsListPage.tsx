@@ -51,13 +51,14 @@ function FarmsListPage() {
         )}
 
         {/* Show grid of farms if there are any */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-4 xs:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
           {farms.map(farm => (
             <OverlayCard
               key={farm.id}
               to={`/farms/${farm.id}`}
               imageUrl={farm.images?.[0]?.image_url}
               title={farm.name}
+              aspect="aspect-[5/4]"
             />
           ))}
         </div>

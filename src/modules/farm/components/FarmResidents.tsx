@@ -25,13 +25,14 @@ function FarmResidents({ horses, horsesError }: FarmResidentsProps) {
           No horses listed for this farm yet.
         </p>
       ) : (
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-4 xs:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
           {horses.map(horse => (
             <OverlayCard
               key={horse.id}
               to={`/horses/${horse.id}`}
               imageUrl={horse.images[0]?.image_url}
               title={horse.name}
+              aspect="aspect-[5/4]"
             />
           ))}
         </div>

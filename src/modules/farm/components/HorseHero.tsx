@@ -28,9 +28,33 @@ function HorseHero({ horse, bookable, onBook, onSupport, bookingRestrictedForAcc
     .filter(Boolean)
     .join('  ·  ')
 
+  // Click a thumbnail to change the main photo. Only shown with 2+ photos.
+  const thumbnails = (className: string) =>
+    horse.images.length > 1 && (
+      <div className={`flex gap-3 ${className}`}>
+        {horse.images.map((img, i) => (
+          <button
+            key={img.id}
+            onClick={() => setActiveImageIndex(i)}
+            aria-label={`View image ${i + 1}`}
+            className={`flex-none w-24 h-16 xs:w-28 xs:h-20 lg:w-40 lg:h-28 rounded-md overflow-hidden border-2 transition ${
+              i === activeImageIndex
+                ? 'border-white'
+                : 'border-white/30 opacity-70 hover:opacity-100'
+            }`}
+          >
+            <img src={img.image_url} alt="" className="w-full h-full object-cover" decoding="async" />
+          </button>
+        ))}
+      </div>
+    )
+
   return (
-    <section className="grid lg:grid-cols-[1.4fr_1fr] min-h-[calc(100vh-3.25rem)]">
-      <div className="relative order-2 lg:order-1 bg-brand-bg flex items-center justify-center min-h-[45vh] lg:min-h-0 overflow-hidden p-4 xs:p-6 lg:p-10">
+    <section className="grid lg:grid-cols-[1.4fr_1fr] lg:min-h-[calc(100vh-3.25rem)]">
+      {/* Below lg the photo stacks first (so it's what you see on landing), then
+          the details panel. pt-16 clears the fixed Back button pinned at top-20,
+          which sits over this panel; not needed at lg where there's more room. */}
+      <div className="relative bg-brand-bg flex flex-col items-center justify-center gap-4 overflow-hidden px-4 pb-6 pt-16 xs:px-6 sm:pb-8 lg:p-10">
         {/* Blurred, zoomed copy of the photo fills the space instead of black
             bars, so the empty area picks up the image's own colours. */}
         {horse.images.length > 0 && (
@@ -63,10 +87,16 @@ function HorseHero({ horse, bookable, onBook, onSupport, bookingRestrictedForAcc
             </p>
           </div>
         )}
+
+        {/* Below lg: thumbnails right under the photo, scrolling sideways if
+            there are more than fit. */}
+        <div className="relative z-1 w-full max-w-2xl lg:hidden">
+          {thumbnails('overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden')}
+        </div>
       </div>
 
       {/* Details panel */}
-      <div className="relative order-1 lg:order-2 flex flex-col items-center justify-center text-center gap-7 bg-brand-gold text-white p-6 xs:p-8 sm:p-10 lg:p-16 overflow-hidden">
+      <div className="relative flex flex-col items-center justify-center text-center gap-7 bg-brand-gold text-white p-6 xs:p-8 sm:p-10 lg:p-16 overflow-hidden">
         {/* The photo bleeds in, heavily blurred, then fades into the panel. */}
         {horse.images.length > 0 && (
           <>
@@ -84,12 +114,8 @@ function HorseHero({ horse, bookable, onBook, onSupport, bookingRestrictedForAcc
           </>
         )}
 
-        {/* Horse name and meta line. mt-10 clears the fixed Back button
-            pinned at top-20 — now that this panel renders first on mobile
-            (see order-1 above), its heading would otherwise land right
-            under that button. Not needed at lg, where the button sits over
-            the photo panel instead. */}
-        <div className="relative z-1 flex flex-col items-center gap-5 mt-10 lg:mt-0">
+        {/* Horse name and meta line. */}
+        <div className="relative z-1 flex flex-col items-center gap-5">
           <div className="flex flex-col items-center gap-3">
             <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-wide uppercase leading-none">
               <span className="text-amber-300">{horse.name.charAt(0)}</span>
@@ -125,30 +151,10 @@ function HorseHero({ horse, bookable, onBook, onSupport, bookingRestrictedForAcc
             )}
           </div>
 
-          {/* Image carousel — click a thumbnail to change the main photo. */}
-          {horse.images.length > 1 && (
-            <div className="flex flex-wrap justify-center gap-3 max-w-xl">
-              {horse.images.map((img, i) => (
-                <button
-                  key={img.id}
-                  onClick={() => setActiveImageIndex(i)}
-                  aria-label={`View image ${i + 1}`}
-                  className={`flex-none w-28 h-20 xs:w-40 xs:h-28 rounded-md overflow-hidden border-2 transition ${
-                    i === activeImageIndex
-                      ? 'border-white'
-                      : 'border-white/30 opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <img
-                    src={img.image_url}
-                    alt=""
-                    className="w-full h-full object-cover"
-                    decoding="async"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Thumbnails live in the details panel only at lg+; below that they sit
+              under the main photo (see above) so they're reachable without
+              scrolling past the name and buttons. */}
+          <div className="hidden lg:block">{thumbnails('flex-wrap justify-center max-w-xl')}</div>
         </div>
       </div>
     </section>
