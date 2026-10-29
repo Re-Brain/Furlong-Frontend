@@ -5,12 +5,14 @@ type OverlayCardProps = {
   /** Card image; when omitted or null, a branded monogram tile is shown instead. */
   imageUrl?: string | null
   title: string
+  /** Tailwind aspect-ratio class for the card; defaults to square. */
+  aspect?: string
 }
 
 // A square image card linking to `to`, with the title overlaid on a dark
 // gradient. Falls back to a monogram tile (the title's first letter) when
 // there's no image.
-function OverlayCard({ to, imageUrl, title }: OverlayCardProps) {
+function OverlayCard({ to, imageUrl, title, aspect = 'aspect-square' }: OverlayCardProps) {
   return (
     <Link
       to={to}
@@ -21,7 +23,7 @@ function OverlayCard({ to, imageUrl, title }: OverlayCardProps) {
         <img
           src={imageUrl}
           alt={title}
-          className="w-full aspect-square object-cover"
+          className={`w-full ${aspect} object-cover`}
           loading="lazy"
           decoding="async"
           draggable={false}
@@ -29,7 +31,7 @@ function OverlayCard({ to, imageUrl, title }: OverlayCardProps) {
       ) : (
         <div
           aria-hidden
-          className="w-full aspect-square bg-linear-to-br from-brand-gold to-[#1f4d3a] flex items-center justify-center"
+          className={`w-full ${aspect} bg-linear-to-br from-brand-gold to-[#1f4d3a] flex items-center justify-center`}
         >
           <span
             style={{ fontFamily: 'var(--font-story-title)' }}
