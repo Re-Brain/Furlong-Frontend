@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { getAllHorses, type Horse } from '../api/horse'
 import OverlayCard from '../../../components/OverlayCard'
+import ShowMoreButton from '../../../components/ShowMoreButton'
+import { useShowMore } from '../../../hooks/useShowMore'
 
 function HorsesListPage() {
   const navigate = useNavigate()
@@ -23,6 +25,9 @@ function HorsesListPage() {
   // A draft/pending/rejected horse isn't meant to be public yet — filter it
   // out client-side too, rather than trusting the backend response alone.
   const approvedHorses = horses.filter(horse => horse.status === 'approved')
+
+  // Reveal horses 12 at a time rather than rendering the whole list at once.
+  const { visible: visibleHorses, remaining, showMore } = useShowMore(approvedHorses)
 
   return (
     <div className="min-h-[calc(100vh-3.25rem)] bg-brand-bg text-brand-text">
@@ -56,7 +61,7 @@ function HorsesListPage() {
 
         {/* Show grid of approved horses if there are any */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-          {approvedHorses.map(horse => (
+          {visibleHorses.map(horse => (
             <OverlayCard
               key={horse.id}
               to={`/horses/${horse.id}`}
@@ -66,6 +71,7 @@ function HorsesListPage() {
             />
           ))}
         </div>
+        <ShowMoreButton remaining={remaining} onClick={showMore} />
       </div>
     </div>
   )
