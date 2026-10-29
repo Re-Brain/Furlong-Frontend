@@ -57,7 +57,7 @@ function DonationManagement() {
             type="button"
             onClick={connectStripe}
             disabled={connecting}
-            className="flex items-center gap-2 bg-brand-gold text-white font-bold px-4 xs:px-6 py-2.5 rounded-lg hover:bg-brand-gold-light transition text-sm disabled:opacity-50 shrink-0"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto bg-brand-gold text-white font-bold px-4 xs:px-6 py-2.5 rounded-lg hover:bg-brand-gold-light transition text-sm disabled:opacity-50 shrink-0"
           >
             {connecting ? 'Redirecting…' : status?.connected ? 'Finish setup' : 'Connect Stripe'}
           </button>
@@ -89,7 +89,30 @@ function DonationManagement() {
           <p className="text-brand-muted text-sm">No donations yet.</p>
         </div>
       ) : (
-        <div className="rounded-lg border border-brand-border overflow-hidden">
+        <>
+        {/* Phone: one card per donation, so nothing needs a sideways scroll. */}
+        <ul className="sm:hidden flex flex-col gap-3">
+          {donations.map(d => (
+            <li
+              key={d.id}
+              className="bg-brand-surface border border-brand-border rounded-lg p-4 flex items-start justify-between gap-3"
+            >
+              <div className="min-w-0">
+                <p className="font-bold text-brand-text truncate">{d.donor_name ?? 'Anonymous'}</p>
+                {d.donor_name && d.donor_email && (
+                  <p className="flex items-center gap-1.5 text-brand-muted text-xs mt-0.5 min-w-0">
+                    <Mail size={12} className="shrink-0" />
+                    <span className="truncate">{d.donor_email}</span>
+                  </p>
+                )}
+                <p className="text-brand-muted text-xs mt-1">{formatDonationDate(d.created_at)}</p>
+              </div>
+              <p className="font-bold text-brand-text whitespace-nowrap">¥{d.amount_yen.toLocaleString()}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden sm:block rounded-lg border border-brand-border overflow-hidden">
           {/* Scroll lives on its own inner element, separate from the
               rounded border above (see HorseRaceRecords for why). Natural
               (non-fixed) column widths + a min-w so the table scrolls
@@ -125,6 +148,7 @@ function DonationManagement() {
           </table>
           </div>
         </div>
+        </>
       )}
     </div>
   )
