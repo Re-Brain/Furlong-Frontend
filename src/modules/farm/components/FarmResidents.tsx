@@ -1,5 +1,7 @@
 import type { Horse } from '../api/horse'
 import OverlayCard from '../../../components/OverlayCard'
+import ShowMoreButton from '../../../components/ShowMoreButton'
+import { useShowMore } from '../../../hooks/useShowMore'
 
 type FarmResidentsProps = {
   horses: Horse[]
@@ -9,6 +11,8 @@ type FarmResidentsProps = {
 // The farm's "Our Residents" section — a grid of horse cards linking to each
 // horse's public page, with error and empty states.
 function FarmResidents({ horses, horsesError }: FarmResidentsProps) {
+  const { visible, remaining, showMore } = useShowMore(horses)
+
   return (
     <section className="flex flex-col gap-6">
       <h2
@@ -25,8 +29,9 @@ function FarmResidents({ horses, horsesError }: FarmResidentsProps) {
           No horses listed for this farm yet.
         </p>
       ) : (
+        <>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-          {horses.map(horse => (
+          {visible.map(horse => (
             <OverlayCard
               key={horse.id}
               to={`/horses/${horse.id}`}
@@ -36,6 +41,8 @@ function FarmResidents({ horses, horsesError }: FarmResidentsProps) {
             />
           ))}
         </div>
+        <ShowMoreButton remaining={remaining} onClick={showMore} />
+        </>
       )}
     </section>
   )
